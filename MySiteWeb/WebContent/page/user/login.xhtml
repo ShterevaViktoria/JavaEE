@@ -1,0 +1,59 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<h:head>
+</h:head>
+<title>#{msgs['default.title']}</title>
+
+<body>
+	<ui:composition template="/page/shared/layout.xhtml">
+		<ui:define name="content">
+			<h:panelGroup id="mainPageContent" layout="block">
+				<h:form styleClass="loginForm">
+					<p:messages autoUpdate="false" id="loginDialogMessages"
+						globalOnly="false" styleClass="loginMessage" />
+					<h:panelGroup layout="block">
+						<p:inputText value="#{loginBean.username}" id="username"
+							styleClass="loginInputField" required="true"
+							requiredMessage="#{msgs['error.required.username']}">
+							<p:watermark for="username" value="#{msgs['user.username']}" />
+						</p:inputText>
+					</h:panelGroup>
+
+					<br clear="all" />
+					<br />
+
+					<h:panelGroup layout="block">
+						<p:password value="#{loginBean.password}" id="password"
+							styleClass="loginInputField" required="true"
+							requiredMessage="#{msgs['error.required.password']}">
+							<p:watermark for="password" value="#{msgs['user.password']}" />
+						</p:password>
+					</h:panelGroup>
+
+					<br clear="all" />
+					<br />
+					<h:panelGroup layout="block">
+						<p:commandButton ajax="false" action="#{loginBean.login}"
+							styleClass="btn btn-info" value="#{msgs['button.login']}">
+						</p:commandButton>
+					</h:panelGroup>
+				</h:form>
+				<h:form>
+					<h:commandLink action="#{loginBean.registerAction()}"
+						value="#{msgs['button.create']}" />
+
+				</h:form>
+			</h:panelGroup>
+		</ui:define>
+	</ui:composition>
+</body>
+
+</html>

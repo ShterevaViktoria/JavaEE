@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<h:head>
+</h:head>
+<title>#{msgs['default.title']}</title>
+<body>
+	<ui:composition template="/page/shared/layout.xhtml">
+		<ui:define name="content">
+<h:form styleClass="editForm" enctype="multipart/form-data">
+
+		<p:outputPanel styleClass="alert alert-danger errorPanel"
+			rendered="#{editUserBean.hasErrors()}">
+			<p:messages autoUpdate="false" id="editParamMessages"
+				globalOnly="false" styleClass="messagesStyle" />
+		</p:outputPanel>
+
+		<div class="col-md-3 editBox">
+			<h3 class="text-primary bold upper headPaddings">
+				<h:outputText value="#{msgs['change.user']}" escape="false" />
+			</h3>
+				<div class="box-field">
+						<label for="email">#{msgs['label.email']}</label>
+						<p:inputText id="email" name="#{msgs['user.email']}"
+							styleClass="editInput" value="#{editUserBean.user.email}"
+							requiredMessage="#{msgs.code_error_required}">
+							<f:validateLength maximum="4000" />
+						</p:inputText>
+					</div>
+				<div class="box-field">
+					<label for="content">#{msgs['label.description']}</label>
+					<p:inputTextarea rows="6" cols="33" id="content" name="#{msgs['user.descripton']}"
+						styleClass="editInput" value="#{editUserBean.user.description}">
+						<f:validateLength maximum="4000" />
+					</p:inputTextarea>
+				</div>
+				
+				<p:fileUpload value="#{editUserBean.file}" mode="simple" skinSimple="true"/>
+
+				<br />
+
+				<div class="box-field">
+					<p:commandButton ajax="false" id="updateuserBtn"
+						styleClass="btn btn-primary createUserBtn"
+						value="#{msgs['button.edit']}"
+						action="#{editUserBean.updateAction}">
+					</p:commandButton>
+
+			</div>
+
+		</div>
+	</h:form>
+
+		</ui:define>
+	</ui:composition>
+</body>
+</html>
+

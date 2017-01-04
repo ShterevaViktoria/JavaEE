@@ -1,0 +1,191 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+<h:head>
+
+</h:head>
+<title>#{msgs['default.title']}</title>
+<body>
+	<ui:composition template="/page/shared/layout.xhtml">
+		<ui:define name="content">
+			<f:metadata>
+				<f:viewParam name="tag" value="#{searchBean.text}" />
+			</f:metadata>
+				<div style="" class="col-md-3 editBox">
+					<h3 class="text-primary bold upper headPaddings">
+						<h:outputText value="#{searchBean.text}" escape="false" />
+					</h3>
+					
+				<h:form id="form">
+					<p:tabView >
+						<p:tab title="#{msgs['search.popular.post']}">
+							<h:form>
+								<p:dataScroller value="#{searchBean.allPopularPosts()}"
+									var="post" chunkSize="20">
+									<f:facet name="loader">
+										<p:commandButton type="button" value="#{msgs['button.more']}"
+											icon="ui-icon-circle-triangle-s" />
+									</f:facet>
+									<h:panelGrid styleClass="center" columns="1" style="width:100%"
+										columnClasses="detail">
+										<p:outputPanel>
+											<h:panelGrid columns="1" cellpadding="5">
+												<p:link outcome="/page/user/profile?faces-redirect=true"
+													value="#{post.author.username}" includeViewParams="true">
+													<f:param name="username" value="#{post.author.username}" />
+												</p:link>
+												<p:graphicImage width="50" height="50"
+													value="/img/profile.png"
+													rendered="#{post.author.image == null}" />
+												<p:graphicImage width="50" height="50"
+													value="#{searchBean.imageUser}"
+													rendered="#{post.author.image != null}">
+													<f:param name="id" value="#{post.author.id}" />
+												</p:graphicImage>
+											</h:panelGrid>
+											<br />
+											<h:panelGrid columns="1" cellpadding="5">
+												<c:set var="msg" value="#{post.content}" />
+												<ui:repeat value="${fn:split(msg,' ')}" var="word">
+													<h:outputText value="#{word}"
+														rendered="${not fn:contains(word, '#')}" />
+													<p:link outcome="/page/home/search?faces-redirect=true"
+														value="#{word}" includeViewParams="true"
+														rendered="${fn:contains(word, '#')}">
+														<f:param name="tag" value="#{word}" />
+													</p:link>
+													<h:outputText value=" " />
+												</ui:repeat>
+												<p:graphicImage width="100" height="100"
+													value="#{searchBean.image}"
+													rendered="#{post.image != null}">
+													<f:param name="id" value="#{post.id}" />
+												</p:graphicImage>
+												<h:outputText value="#{post.createdDate.toString()}" />
+												<p:button outcome="/page/authenticated/comment?faces-redirect=true" value="#{post.numberComments.toString()}"
+												icon="ui-icon-comment" title="Comments" includeViewParams="true">
+												<f:param name="post" value="#{post.id}" />
+											</p:button>
+												<p:button icon="ui-icon-arrowreturnthick-1-w"
+													title="Reposts" value="#{post.numberReposts.toString()}" />
+												<p:button icon="ui-icon-heart" title="Likes"
+													value="#{post.numberLikes.toString()}" />
+												<br />
+											</h:panelGrid>
+										</p:outputPanel>
+										<p:separator />
+									</h:panelGrid>
+								</p:dataScroller>
+							</h:form>
+						</p:tab>
+						<p:tab title="#{msgs['search.new.post']}">
+							<h:form>
+								<p:dataScroller value="#{searchBean.allNewPosts()}" var="post"
+									chunkSize="20">
+									<f:facet name="loader">
+										<p:commandButton type="button" value="#{msgs['button.more']}"
+											icon="ui-icon-circle-triangle-s" />
+									</f:facet>
+
+									<h:panelGrid columns="1" style="width:100%"
+										columnClasses="detail">
+										<p:outputPanel>
+											<h:panelGrid columns="1" cellpadding="5">
+
+												<p:link outcome="/page/user/profile?faces-redirect=true"
+													value="#{post.author.username}" includeViewParams="true">
+													<f:param name="username" value="#{post.author.username}" />
+												</p:link>
+												<p:graphicImage width="50" height="50"
+													value="/img/profile.png"
+													rendered="#{post.author.image == null}" />
+												<p:graphicImage width="50" height="50"
+													value="#{searchBean.imageUser}"
+													rendered="#{post.author.image != null}">
+													<f:param name="id" value="#{post.author.id}" />
+												</p:graphicImage>
+											</h:panelGrid>
+											<br />
+											<h:panelGrid columns="1" cellpadding="5">
+												<c:set var="msg" value="#{post.content}" />
+												<ui:repeat value="${fn:split(msg,' ')}" var="word">
+													<h:outputText value="#{word}"
+														rendered="${not fn:contains(word, '#')}" />
+													<p:link outcome="/page/home/search?faces-redirect=true"
+														value="#{word}" includeViewParams="true"
+														rendered="${fn:contains(word, '#')}">
+														<f:param name="tag" value="#{word}" />
+													</p:link>
+													<h:outputText value=" " />
+												</ui:repeat>
+												<p:graphicImage width="100" height="100"
+													value="#{searchBean.image}"
+													rendered="#{post.image != null}">
+													<f:param name="id" value="#{post.id}" />
+												</p:graphicImage>
+												<h:outputText value="#{post.createdDate.toString()}" />
+												<p:button outcome="/page/authenticated/comment?faces-redirect=true" value="#{post.numberComments.toString()}"
+												icon="ui-icon-comment" title="Comments" includeViewParams="true">
+												<f:param name="post" value="#{post.id}" />
+											</p:button>
+												<p:button icon="ui-icon-arrowreturnthick-1-w"
+													title="Reposts" value="#{post.numberReposts.toString()}" />
+												<p:button icon="ui-icon-heart" title="Likes"
+													value="#{post.numberLikes.toString()}" />
+												<br />
+											</h:panelGrid>
+										</p:outputPanel>
+										<p:separator />
+									</h:panelGrid>
+								</p:dataScroller>
+							</h:form>
+						</p:tab>
+						<p:tab title="#{msgs['search.profile']}">
+							<h:form>
+								<p:dataScroller value="#{searchBean.allProfiles()}" var="user"
+									chunkSize="20">
+									<f:facet name="loader">
+										<p:commandButton type="button" value="#{msgs['button.more']}"
+											icon="ui-icon-circle-triangle-s" />
+									</f:facet>
+									<h:panelGrid columns="1" style="width:100%"
+										columnClasses="detail">
+										<p:outputPanel>
+											<h:panelGrid columns="1" cellpadding="5">
+												<p:link outcome="/page/user/profile?faces-redirect=true"
+													value="#{user.username}" includeViewParams="true">
+													<f:param name="username" value="#{user.username}" />
+												</p:link>
+												<p:graphicImage width="50" height="50"
+													value="/img/profile.png"
+													rendered="#{post.author.image == null}" />
+												<p:graphicImage width="50" height="50"
+													value="#{searchBean.imageUser}"
+													rendered="#{post.author.image != null}">
+													<f:param name="id" value="#{post.author.id}" />
+												</p:graphicImage>
+												<h:outputText value="#{user.description}"
+													style="font-weight: bold" />
+												<p:button value="#{msgs['button.follow']}" />
+											</h:panelGrid>
+											<p:separator />
+
+										</p:outputPanel>
+									</h:panelGrid>
+								</p:dataScroller>
+							</h:form>
+						</p:tab>
+					</p:tabView>
+				</h:form>
+				</div>
+		</ui:define>
+	</ui:composition>
+</body>
+</html>

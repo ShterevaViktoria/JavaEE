@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<h:head>
+
+</h:head>
+<title>#{msgs['default.title']}</title>
+<body id="editBody">
+	<ui:composition>
+		<h:form>
+			<p:menubar>
+				<p:menuitem value="#{msgs['menu.home']}"
+					action="#{menuBean.loginAction()}"
+					rendered="#{menuBean.authenticated == 'false'}" />
+				<p:menuitem value="#{msgs['menu.profile']}"
+					action="#{menuBean.profileAction()}"
+					rendered="#{menuBean.authenticated == 'true'}" />
+				<p:menuitem style="float:right">
+					<p:inputText id="inputField" style="margin-right:10px"
+						placeholder="#{msgs['menu.search']}"
+						value="#{menuBean.searchedText}" />
+				</p:menuitem>
+
+				<p:menuitem style="float:right" type="button" icon="ui-icon-search"
+					action="#{menuBean.handleKeyEvent()}" />
+
+				<p:menuitem type="button" value="#{msgs['button.logout']}"
+					action="#{loginBean.logout()}"
+					rendered="#{menuBean.authenticated == 'true'}" />
+
+			</p:menubar>
+		</h:form>
+	</ui:composition>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+<h:head>
+
+</h:head>
+<title>#{msgs['default.title']}</title>
+<body>
+
+	<ui:composition template="/page/shared/layout.xhtml">
+		<ui:define name="content">
+			<f:metadata>
+				<f:viewParam name="post" value="#{commentBean.postId}" />
+				<f:event type="preRenderView" listener="#{commentBean.init()}" />
+			</f:metadata>
+			<div>
+				<h:form>
+					<p:panel id="basic">
+						<h:panelGrid columns="1" style="width:100%" columnClasses="detail">
+							<p:outputPanel>
+								<h:panelGrid style="text-align: right" columns="1"
+									cellpadding="5">
+									<p:link outcome="/page/user/profile?faces-redirect=true"
+										value="#{commentBean.post.author.username}"
+										includeViewParams="true">
+										<f:param name="username"
+											value="#{commentBean.post.author.username}" />
+									</p:link>
+									<p:graphicImage width="50" height="50" value="/img/profile.png"
+										rendered="#{commentBean.post.author.image == null}" />
+									<p:graphicImage width="50" height="50"
+										value="#{commentBean.imageUser}"
+										rendered="#{commentBean.post.author.image != null}">
+										<f:param name="id" value="#{commentBean.post.author.id}" />
+									</p:graphicImage>
+								</h:panelGrid>
+								<br />
+								<h:panelGrid columns="1" cellpadding="5">
+									<c:set var="msg" value="#{commentBean.post.content}" />
+									<ui:repeat value="${fn:split(msg,' ')}" var="word">
+										<h:outputText value="#{word}"
+											rendered="${not fn:contains(word, '#')}" />
+										<p:link outcome="/page/home/search?faces-redirect=true"
+											value="#{word}" includeViewParams="true"
+											rendered="${fn:contains(word, '#')}">
+											<f:param name="tag" value="#{word}" />
+										</p:link>
+										<h:outputText value=" " />
+									</ui:repeat>
+									<p:graphicImage width="100" height="100"
+										value="#{commentBean.image}"
+										rendered="#{commentBean.post.image != null}">
+										<f:param name="id" value="#{commentBean.post.id}" />
+									</p:graphicImage>
+									<h:outputText
+										value="#{commentBean.post.createdDate.toString()}" />
+									<p:button
+										outcome="/page/authenticated/comment?faces-redirect=true"
+										value="#{commentBean.post.numberComments.toString()}"
+										icon="ui-icon-comment" title="Comments"
+										includeViewParams="true">
+										<f:param name="post" value="#{post.id}" />
+									</p:button>
+									<p:button icon="ui-icon-arrowreturnthick-1-w" title="Reposts"
+										value="#{commentBean.post.numberReposts.toString()}" />
+									<p:button icon="ui-icon-heart" title="Likes"
+										value="#{commentBean.post.numberLikes.toString()}" />
+									<br />
+								</h:panelGrid>
+							</p:outputPanel>
+						</h:panelGrid>
+					</p:panel>
+				</h:form>
+			</div>
+			<h:form>
+				<p:dataScroller value="#{commentBean.findAllComments()}"
+					var="comment" chunkSize="20">
+					<f:facet name="loader">
+						<p:commandButton type="button" value="#{msgs['button.more']}"
+							icon="ui-icon-circle-triangle-s" />
+					</f:facet>
+					<h:panelGrid columns="1" style="width:100%" columnClasses="detail">
+						<p:outputPanel>
+							<h:panelGrid style="text-align: right" columns="1"
+								cellpadding="5">
+								<p:link outcome="/page/user/profile?faces-redirect=true"
+									value="#{comment.author.username}" includeViewParams="true">
+									<f:param name="username" value="#{comment.author.username}" />
+								</p:link>
+								<p:graphicImage width="50" height="50" value="/img/profile.png"
+									rendered="#{comment.author.image == null}" />
+								<p:graphicImage width="50" height="50"
+									value="#{commentBean.imageUser}"
+									rendered="#{comment.author.image != null}">
+									<f:param name="id" value="#{comment.author.id}" />
+								</p:graphicImage>
+								<h:outputText value="#{comment.content}" />
+								<h:outputText value="#{comment.createdDate.toString()}" />
+							</h:panelGrid>
+						</p:outputPanel>
+						<p:separator />
+					</h:panelGrid>
+				</p:dataScroller>
+			</h:form>
+			<h:form styleClass="editForm">
+				<p:outputPanel styleClass="alert alert-danger errorPanel"
+					rendered="#{commentBean.hasErrors()}">
+					<p:messages autoUpdate="false" id="editParamMessages"
+						globalOnly="false" styleClass="messagesStyle" />
+				</p:outputPanel>
+
+				<div style="" class="col-md-3 editBox">
+					<h3 class="text-primary bold upper headPaddings">
+						<h:outputText value="#{msgs['edit.comment']}" escape="false" />
+					</h3>
+
+					<div class="box-field">
+						<label for="content">#{msgs['label.content']}</label>
+						<p:inputTextarea rows="6" cols="33" id="content"
+							name="#{msgs['label.content']}" styleClass="editInput"
+							value="#{commentBean.comment.content}"
+							requiredMessage="#{msgs.code_error_required}">
+							<f:validateLength maximum="4000" />
+						</p:inputTextarea>
+					</div>
+					<br />
+
+					<div class="box-field">
+						<p:commandButton ajax="false" id="updateuserBtn"
+							styleClass="btn btn-primary createUserBtn"
+							value="#{msgs['button.create.comment']}"
+							action="#{commentBean.createAction}">
+						</p:commandButton>
+
+					</div>
+
+				</div>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</body>
+</html>
